@@ -1,0 +1,156 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Elektro-Skatenboard.de Tacho</title>
+<style type="text/css" media="screen">@import "jqtouch/jqtouch.min.css";</style>
+<style type="text/css" media="screen">@import "themes/jqt/theme.min.css";</style>
+<style type="text/css" media="screen">@import "elektro-skateboard-iphone.css";</style>
+<script src="jqtouch/jquery.1.3.2.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="jqtouch/jqtouch.min.js" type="application/x-javascript" charset="utf-8"></script>
+<script src="extensions/jqt.location.js" type="application/x-javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8">
+var debug = true;
+var jQT = new $.jQTouch({
+	icon: 'elektro-skateboard_button.png',
+	addGlossToIcon: false,
+	startupScreen: 'elektro-skateboard_startup.png',
+	statusBar: 'black'
+});
+
+
+$('#btn_start').live('change', function(){
+	var $el = $(this);
+	if ($el.attr('checked')) {
+		startTrack();
+	} else {
+		stopTrack();
+	}
+});
+
+var watchId;
+function startTrack() {
+if (!navigator.geolocation) {
+	setDisplay("GET A BETTER BROWSER! 'navigator.geolocation' is unsupported.");
+	} else {
+	   watchId = navigator.geolocation.watchPosition(showLocation, showError, {enableHighAccuracy:true,maximumAge:6000});
+	}
+}
+
+function stopTrack() {
+navigator.geolocation.clearWatch(watchId);
+setDisplay("Tacho ist nicht eingeschaltet");
+}
+
+
+function setDisplay(text) {
+	$('.info').empty().append(text);
+}
+var speedmax = 0;
+function setSpeed(speed) {
+	if (speed > 0) {
+		// in km/h umrechen
+		speed_kmh = speed * 3600 / 1000;
+		// auf zwei Kommastellen runden
+		speed_txt = speed_kmh.toFixed(2);
+		if (speedmax < speed_txt) {
+			speedmax = speed_txt;
+			$('.speedmax').empty().append(speed_txt);
+		}
+		$('.speed').empty().append(speed_txt);
+	}
+}
+
+function showError(error) {
+	altert(error.code + ' ' + error.message);
+}
+function showLocation(position) {
+	if (debug) {
+		var text='<p>Latitude: ' + position.coords.latitude + '</p>' 
+		+ '<p>Longitude: ' + position.coords.longitude + '</p>' 
+		+ '<p>Accuracy: ' + position.coords.accuracy + '</p>' 
+		+ '<p>Altitude: ' + position.coords.altitude + '</p>' 
+		+ '<p>Altitude accuracy: ' + position.coords.altitudeAccuracy + '</p>' 
+		+ '<p>Speed: ' + position.coords.speed + '</p>' 
+		+ '<p>Heading: ' + position.coords.heading + '</p>';			
+		setDisplay(text);
+	}
+	setSpeed(position.coords.speed);
+}
+</script>
+<style type="text/css">
+#tachoanzeige {
+	text-align: center;
+	background-color:#000;
+	height:100px;
+}
+.speed {
+	font-size: 80px;
+	font-family: "American Typewriter";
+}
+</style>
+</head>
+<body>
+<div class="selectable" id="info" style="background-color:#000">
+<div style="background-color:#000; min-height:420px;">
+	<p><img src="elektro-skateboard_header.png"/></p>
+	<br />
+	<p>elektro-skateboard.de iPhone WebApp Version 0.1 beta</p>
+	<br />
+	<p>
+	<h2>Funktionen:</h2>
+	Zeigt per GPS die aktuelle Geschwindigkeit an
+	</p>
+	<p>
+	Programmiert von Kai Hauser.
+	
+	</p>	
+	<a href="http://www.elektro-skateboard.de">elektro-skateboard.de</a>
+	
+	<p><br/><br/><a class="grayButton goback" href="#">Yeah!</a></p>
+</div>
+</div>
+
+<div id="home" class="current">
+
+		<div class="toolbar">
+			<h1>Tacho</h1>
+			<a href="#info" id="infoButton" class="button flip">Info</a>
+		</div>
+		<div style="margin-top:10px;padding:10px;height:40px;">
+		<span style="line-height:30px;">Geschwindigkeit messen</span><span class="toggle"><input type="checkbox" id="btn_start" /></span>
+		</div>
+		<div id="tachoanzeige">
+			<span class="speed">0</span>
+		</div>
+		<div>
+			H&ouml;chstgeschwindigkeit: <span class="speedmax">0</span> km/h
+		</div>		
+		<div class="info">Tacho ist nicht eingeschaltet</div>
+		<!--
+		<ul class="individual">
+			<li>Start</li>
+			<li>Stop</li>
+		</ul>
+		-->
+
+<script type="text/javascript"><!--
+window.googleAfmcRequest = {
+  client: 'ca-mb-pub-1681179010709936',
+  ad_type: 'text_image',
+  output: 'html',
+  channel: '',
+  format: '320x50_mb',
+  oe: 'utf8',
+  color_border: '336699',
+  color_bg: 'FFFFFF',
+  color_link: '0000FF',
+  color_text: '000000',
+  color_url: '008000',
+};
+//--></script>
+<script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_afmc_ads.js"></script>
+
+</div>
+</body>
+</html>
