@@ -10,7 +10,8 @@
 <script src="jqtouch/jqtouch.min.js" type="application/x-javascript" charset="utf-8"></script>
 <script src="extensions/jqt.location.js" type="application/x-javascript" charset="utf-8"></script>
 <script type="text/javascript" charset="utf-8">
-var debug = true;
+// Disable debug mode in production to avoid leaking location data
+var debug = false;
 var jQT = new $.jQTouch({
 	icon: 'elektro-skateboard_button.png',
 	addGlossToIcon: false,
@@ -19,7 +20,8 @@ var jQT = new $.jQTouch({
 });
 
 
-$('#btn_start').live('change', function(){
+// Use modern event binding
+$(document).on('change', '#btn_start', function(){
 	var $el = $(this);
 	if ($el.attr('checked')) {
 		startTrack();
@@ -62,7 +64,7 @@ function setSpeed(speed) {
 }
 
 function showError(error) {
-	altert(error.code + ' ' + error.message);
+        alert(error.code + ' ' + error.message);
 }
 function showLocation(position) {
 	if (debug) {
@@ -149,7 +151,7 @@ window.googleAfmcRequest = {
   color_url: '008000',
 };
 //--></script>
-<script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_afmc_ads.js"></script>
+<script type="text/javascript" src="https://pagead2.googlesyndication.com/pagead/show_afmc_ads.js"></script>
 
 </div>
 </body>
